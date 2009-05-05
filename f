@@ -4,9 +4,10 @@ use strict;
 use Getopt::Std;
 
 my %o = ( d => "\t" );
-getopt('d', \%o);
+getopts('d:', \%o);
 my $opt_d = $o{d};
 
+# get the fields to print
 my @list = ();
 my @ranges = split(/,/, shift());
 for my $rn (@ranges) {
@@ -26,21 +27,29 @@ for my $rn (@ranges) {
 }
 
 while (<>) {
+    # get the contents of the fields
     chomp;
     my @F = split $opt_d;
     my $l = scalar @F;
     my @fields = ();
     for my $a (@list) {
 	my ($s, $e) = @$a;
+
+	# If we have a positive and a negative endpoint, and if the positive
+	# value is larger than the number of fields, don't do anything.
+	# Without this bit we would simply print the final field.
+	next if ($s >= 0 && $e < 0 && $s >= $l)
+		|| ($e >= 0 && $s < 0 && $e >= $l);
+
 	$s = $l + $s if $s < 0;
 	$e = $l + $e if $e < 0;
 	my @flist = $s > $e ? reverse($e..$s) : $s..$e;
 	for my $x (@flist) {
 	    push @fields, $F[$x] if $l > $x;
 	}
-	#push @fields, @F[ ($s > $e ? reverse($e..$s) : $s..$e) ];
     }
 
+    # print them.
     while($#fields > 0) {
 	print shift(@fields), $opt_d;
     }
