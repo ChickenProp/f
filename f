@@ -29,6 +29,16 @@ for my $rn (@ranges) {
 while (<>) {
     # get the contents of the fields
     chomp;
+
+    # Handle CRLF line endings. Without this, the CR would get caught in the
+    # final field, and if printed before another field, would mess everything
+    # up. (A CR anywhere else will still do that.)
+    my $lf = "\n";
+    if (/\r$/) {
+	    $lf = "\r\n";
+	    chop;
+    }
+
     my @F = split $opt_d;
     my $l = scalar @F;
     my @fields = ();
@@ -53,6 +63,5 @@ while (<>) {
     while($#fields > 0) {
 	print shift(@fields), $opt_d;
     }
-    print shift(@fields), "\n" if $#fields != -1;
+    print shift(@fields), $lf if $#fields != -1;
 }
-
