@@ -61,7 +61,7 @@ while (<>) {
 	$e = $l + $e if $e < 0;
 	my @flist = $s > $e ? reverse($e..$s) : $s..$e;
 	for my $x (@flist) {
-	    push @fields, $F[$x] if $l > $x;
+	    push @fields, $F[$x] if defined $F[$x];
 	}
     }
 
