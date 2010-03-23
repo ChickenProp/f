@@ -65,9 +65,5 @@ while (<>) {
 	}
     }
 
-    # print them.
-    while($#fields > 0) {
-	print shift(@fields), $opt_o;
-    }
-    print shift(@fields), $lf if $#fields != -1;
+    print join($opt_o, @fields), $lf;
 }
