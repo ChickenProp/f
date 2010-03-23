@@ -39,7 +39,10 @@ while (<>) {
 	    chop;
     }
 
-    my @F = split $opt_d;
+    # Specifying -1 as the limit to split causes it not to strip empty trailing
+    # fields. Possibly there should be an option, but this seems the sane
+    # default.
+    my @F = split $opt_d, $_, -1;
     my $l = scalar @F;
     my @fields = ();
     for my $a (@list) {
