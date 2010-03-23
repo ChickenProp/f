@@ -2,10 +2,13 @@
 use warnings;
 use strict;
 use Getopt::Std;
+use String::Escape;
 
+# Options: d is the input delimeter, o is the output delimeter (defaults to d).
 my %o = ( d => "\t" );
-getopts('d:', \%o);
+getopts('d:o:', \%o);
 my $opt_d = $o{d};
+my $opt_o = String::Escape::unbackslash( exists $o{o} ? $o{o} : $o{d} );
 
 # get the fields to print
 my @list = ();
@@ -64,7 +67,7 @@ while (<>) {
 
     # print them.
     while($#fields > 0) {
-	print shift(@fields), $opt_d;
+	print shift(@fields), $opt_o;
     }
     print shift(@fields), $lf if $#fields != -1;
 }
